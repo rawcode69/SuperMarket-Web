@@ -35,7 +35,7 @@ const createProduct = (event) => {
   let name = document.getElementById("name").value;
   let price = document.getElementById("price").value;
   let qty = document.getElementById("qty").value;
-  let categoryId = document.getElementById("categoryId").value;
+  let categoryId = document.getElementById("CategoryId").value;
 
   let data = {
     "name": name,
