@@ -3,6 +3,8 @@ package com.example.database.entity;
 import java.util.HashSet;
 import java.util.Set;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -35,6 +37,7 @@ public class Product {
     @JoinColumn(name = "category_id")
     private Category category;
 
+    @JsonIgnore
     @ManyToMany(mappedBy = "products")
     private Set<Order> orders = new HashSet<>();
 
