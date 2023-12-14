@@ -19,30 +19,30 @@ import io.jsonwebtoken.security.Keys;
 @Component
 public class JwtUtils {
 
-  @Value("$(app.secret)")
+  @Value("${app.secret}")
   private String jwtSecret;
 
-  @Value("$(app.jwtExpiration)")
+  @Value("${app.jwtExpiration}")
   private String jwtExpiration;
 
   private Key key() {
-    return Keys.hmacShaKeyFor(Decoders.BASE64.decode(jwtSecret));
+    return Keys.hmacShaKeyFor(Decoders.BASE64.decode(jwtSecret)); // generate the key
   }
 
-  public String gernerateJwtToken(Authentication authentication) {
+  public String generateJwtToken(Authentication authentication) {
 
     UserDetails userDetails = (UserDetails) authentication.getPrincipal();
 
     return Jwts.builder()
         .setSubject(userDetails.getUsername())
         .setIssuedAt(new Date())
-        .setExpiration(new Date(new Date().getTime() + jwtExpiration))
+        .setExpiration(new Date(new Date().getTime() + Long.parseLong(jwtExpiration) ))
         .signWith(key(), SignatureAlgorithm.HS256)
         .compact();
 
   }
 
-  public boolean validateJwtToken(String authToken) {
+  public boolean validateJwtToken(String authToken) { // validate the token. This mehtod is used to validate the token in the AuthTokenFilter
 
     try {
       Jwts.parserBuilder().setSigningKey(key()).build().parse(authToken);
@@ -61,8 +61,11 @@ public class JwtUtils {
 
   }
 
-  public String getUsernameFromToken(String authToken) {
+  public String getUsernameFromToken(String authToken) { // This method is used get the userName from token in the
+                                                         // AuthTokenFilter class.
     return Jwts.parserBuilder().setSigningKey(key()).build().parseClaimsJws(authToken).getBody().getSubject();
   }
+
+  // Summary: This class provides methods for token filter process.
 
 }

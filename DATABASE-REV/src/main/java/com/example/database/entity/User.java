@@ -18,8 +18,12 @@ public class User {
     private long id;
 
     @Column(unique = true)
-    private String Username;
+    private String username;
     
+    private String password;
+    //I added this password later, Plaease check again if any error occurs regarding to this.
 
     private String address;
+
+    private String email;
 }
