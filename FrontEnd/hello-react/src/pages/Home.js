@@ -1,5 +1,6 @@
+import axios from "axios";
 import { useEffect, useState } from "react";
-import { Link, json } from "react-router-dom";
+import { Link, json, useNavigate } from "react-router-dom";
 
 
 const Home = () => {
@@ -19,36 +20,35 @@ const Home = () => {
     getCategories();
   }, [])
 
-  const getProducts = () => {
+  const navigate = useNavigate();
 
-    fetch('http://localhost:8080/products').
+  const getProducts = async () => {
 
-      then(response => {
+    try {
+      const response = await axios.get('http://localhost:8080/products');
+      setProducts(response.data);
+    } catch (error) {
 
-        return response.json();
+      if (error.response.status === 401) {
+        console.log(error);
+        navigate('/login');
+      }
 
-      }).then(data => {
-
-        setProducts(data);
-
-      }).catch(errors => {
-
-        console.log(errors)
-
-      })
+    }
   }
 
-  const getCategories = () => {
-    fetch('http://localhost:8080/categories')
-      .then(response => {
-        return response.json();
-      })
-      .then(data => {
-        setCategories(data);
-      })
-      .catch(errors => {
-        console.log(errors);
-      })
+  const getCategories = async () => {
+
+    try {
+      const response = await axios.get('http://localhost:8080/categories');
+      setCategories(response.data);
+    } catch (error) {
+      if (error.response.status === 401) {
+        console.log(error);
+        navigate('/login');
+      }
+    }
+
   }
 
   const nameHandle = (event) => {
@@ -97,14 +97,45 @@ const Home = () => {
 
   }
 
+  const handleLogout = () =>{
+    localStorage.removeItem('token');
+    navigate('/login');
+  }
+
   return (
     <>
-      <nav class="navbar navbar-expand-lg bg-body-tertiary">
-        <div class="container-fluid">
-          <a class="navbar-brand" href="#">Navbar</a>
-          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
-            <span class="navbar-toggler-icon"></span>
-          </button>
+      <nav class="navbar navbar-expand-lg bg-body-tertiary ">
+
+        <div class="container-fluid d-flex justify-content-between">
+
+          <div>
+            <a class="navbar-brand" href="#">Super Market</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+              <span class="navbar-toggler-icon"></span>
+            </button>
+          </div>
+
+          <div>
+            <a class="navbar-brand" href="#">Sign In</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+              <span class="navbar-toggler-icon"></span>
+            </button>
+          </div>
+
+          <div>
+            <a class="navbar-brand" href="#">Login</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+              <span class="navbar-toggler-icon"></span>
+            </button>
+          </div>
+
+          <div>
+            <a class="navbar-brand" href="#" onClick={handleLogout}>Log out </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation" >
+              <span class="navbar-toggler-icon"></span>
+            </button>
+          </div>
+
           <div class="collapse navbar-collapse" id="navbarNav">
             <ul class="navbar-nav">
 

@@ -49,11 +49,11 @@ public class AuthTokenFilter extends OncePerRequestFilter {
       }
 
     } catch (Exception e) {
-      System.err.println("Cannot set User auth");
       System.err.println("Exception during token validation: " + e.getMessage());
     }
 
     filterChain.doFilter(request, response);
+    
   }
 
   private String parseJwt(HttpServletRequest request) {
@@ -67,6 +67,6 @@ public class AuthTokenFilter extends OncePerRequestFilter {
     return null;
   }
 
-  // Summary:  Filter the token and create the security context for it.
+  // Summary:  Filter the token and create the security context for it. This class is executed autmatically when the request is recieved and executed once per request.
 
 }

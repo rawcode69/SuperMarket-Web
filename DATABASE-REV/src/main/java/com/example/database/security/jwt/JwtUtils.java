@@ -29,7 +29,7 @@ public class JwtUtils {
     return Keys.hmacShaKeyFor(Decoders.BASE64.decode(jwtSecret)); // generate the key
   }
 
-  public String generateJwtToken(Authentication authentication) {
+  public String generateJwtToken(Authentication authentication) { // This method generate the token
 
     UserDetails userDetails = (UserDetails) authentication.getPrincipal();
 
@@ -39,7 +39,6 @@ public class JwtUtils {
         .setExpiration(new Date(new Date().getTime() + Long.parseLong(jwtExpiration) ))
         .signWith(key(), SignatureAlgorithm.HS256)
         .compact();
-
   }
 
   public boolean validateJwtToken(String authToken) { // validate the token. This mehtod is used to validate the token in the AuthTokenFilter
@@ -61,11 +60,10 @@ public class JwtUtils {
 
   }
 
-  public String getUsernameFromToken(String authToken) { // This method is used get the userName from token in the
-                                                         // AuthTokenFilter class.
+  public String getUsernameFromToken(String authToken) { // This method is used get the userName from token in the AuthTokenFilter class.
     return Jwts.parserBuilder().setSigningKey(key()).build().parseClaimsJws(authToken).getBody().getSubject();
   }
 
-  // Summary: This class provides methods for token filter process.
+  // Summary: This class provides methods for token filter process and for authController.
 
 }

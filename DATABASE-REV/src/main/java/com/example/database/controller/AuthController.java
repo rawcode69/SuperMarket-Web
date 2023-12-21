@@ -8,6 +8,7 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -21,6 +22,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 
 @RestController
+@CrossOrigin(origins = "*")
 public class AuthController {
 
   @Autowired
@@ -41,12 +43,12 @@ public class AuthController {
   @GetMapping("/auth/login") // This is the path got acccess without login
   public String login() {
     return "Login is working without auth";
-  } 
+  }
 
   @PostMapping("/auth/register")
   public ResponseEntity<?> registerUser(@RequestBody User user) {
 
-    if (userRepository.existsByEmail(user.getUsername())) {
+    if (userRepository.existsByUsername(user.getUsername())) {
       return ResponseEntity.badRequest().body("User name is already in use");
     }
 
@@ -58,6 +60,7 @@ public class AuthController {
     newUser.setUsername(user.getUsername());
     newUser.setEmail(user.getEmail());
     newUser.setPassword(passwordEncoder.encode(user.getPassword()));
+    newUser.setAddress(user.getAddress());
 
     return ResponseEntity.ok(userService.createUser(newUser));
 
